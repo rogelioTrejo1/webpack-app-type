@@ -1,7 +1,20 @@
+//Configuro las variables de entorno en la confiruracion de webpack
+import { config } from "dotenv";
+config();
+
 //Dependencias de configuración
-const path = require('path');
-const htmlWebpackPlugin = require('html-webpack-plugin');
-const miniCssExtractPlugin = require('mini-css-extract-plugin');
+import { Configuration,  } from "webpack";
+import path from "path";
+import htmlWebpackPlugin from "html-webpack-plugin"
+import miniCssExtractPlugin from "mini-css-extract-plugin";
+import DotEnv from "dotenv-webpack";
+
+//Configuración extra para el entorno de desarrollo "webpack-dev-server"
+interface WebpackConfig extends Configuration {
+    devServer : {
+        port: any
+    }
+}
 
 /**
  * Configuración basica para un proyecto usando webpack para mejorar un entorno 
@@ -11,7 +24,8 @@ const miniCssExtractPlugin = require('mini-css-extract-plugin');
  */
 
 //Configuraciones de webpack
-module.exports = {
+const webpackConfig: WebpackConfig = {
+
     /**
      * Se define donde es encontrara el archivo principal que ejecutara la aplicación.
      */
@@ -143,16 +157,23 @@ module.exports = {
         //Manejo de todo el CSS o archivos de un pre procesador de CSS
         new miniCssExtractPlugin({
             filename: "css/bandle.css"
-        })
+        }),
+        new DotEnv()
     ],
     /**
      * Se establesen las configuraciones de un servidor de desarrollo para una
      * mejor facilidad de creación.
      * 
      * Si se desean cambiar, verifique la documentacion en: https://www.npmjs.com/package/webpack-dev-server
-     */
+     * 
+     * Nota: Al ocupar typescript como lenguaje de configuración no se tiene en la documentacion oficial alguna
+     * interface o dato quue nos ayude al autocomplementado, es por eso que se crea una interface que hereda 
+     * todas las configuraciones de webpack añadiendo la configuracion de webpack-dev-server
+     * 
+     * */
     devServer: {
-        port: 3000
-    }
-
+        port: process.env.PORT
+      }
 };
+
+export default webpackConfig;

@@ -172,8 +172,8 @@ const webpackConfig: WebpackConfig = {
      * 
      * */
     devServer: {
-        port: process.env.PORT
-      }
+        port: process.env.PORT || 4000
+    }
 };
 
 export default webpackConfig;
